@@ -49,3 +49,20 @@
     line: 'bind-address = 0.0.0.0'
     state: present
   notify: restart mariadb
+
+### CREAR BASE DE DATOS DE WORDPRESS Y USUARIO
+
+- name: Crear base de datos de WordPress
+  community.mysql.mysql_db:
+    name: "{{ wordpress_db_name }}"
+    state: present
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: Crear usuario de WordPress
+  community.mysql.mysql_user:
+    name: "{{ wordpress_db_user }}"
+    password: "{{ wordpress_db_password }}"
+    host: "%"
+    priv: "{{ wordpress_db_name }}.*:ALL"
+    state: present
+    login_unix_socket: /var/run/mysqld/mysqld.sock

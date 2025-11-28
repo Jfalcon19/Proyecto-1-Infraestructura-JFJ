@@ -64,6 +64,8 @@
     owner: www-data
     group: www-data
     
+### INSTALAR phpMyAdmin
+
 - name: Instalar phpMyAdmin
   apt:
     name: phpmyadmin
@@ -78,5 +80,67 @@
   file:
     src: /etc/apache2/sites-available/phpmyadmin.conf
     dest: /etc/apache2/sites-enabled/phpmyadmin.conf
+    state: link
+  notify: restart apache2
+
+
+### INSTALAR WORDPRESS
+
+- name: Instalar dependencias de WordPress
+  apt:
+    pkg:
+      - php
+      - php-mysql
+      - php-xml
+      - php-curl
+      - php-gd
+      - php-mbstring
+      - php-zip
+      - php-json
+      - unzip
+    state: present
+    update_cache: yes
+
+- name: Descargar WordPress
+  get_url:
+    url: https://wordpress.org/latest.tar.gz
+    dest: /tmp/wordpress.tar.gz
+
+- name: Extraer WordPress
+  ansible.builtin.unarchive:
+    src: /tmp/wordpress.tar.gz
+    dest: /var/www/
+    remote_src: yes
+
+- name: Renombrar carpeta wordpress
+  ansible.builtin.command:
+    cmd: mv /var/www/wordpress {{ wordpress_install_dir }}
+  args:
+    creates: "{{ wordpress_install_dir }}"
+
+- name: Copiar wp-config.php
+  template:
+    src: wp-config.php.j2
+    dest: "{{ wordpress_install_dir }}/wp-config.php"
+    owner: www-data
+    group: www-data
+    mode: '0644'
+
+- name: Establecer permisos de WordPress
+  ansible.builtin.file:
+    path: "{{ wordpress_install_dir }}"
+    owner: www-data
+    group: www-data
+    recurse: yes
+
+- name: Copiar VirtualHost de WordPress
+  template:
+    src: wordpress.conf.j2
+    dest: /etc/apache2/sites-available/wordpress.conf
+
+- name: Activar sitio Wordpress
+  file:
+    src: /etc/apache2/sites-available/wordpress.conf
+    dest: /etc/apache2/sites-enabled/wordpress.conf
     state: link
   notify: restart apache2

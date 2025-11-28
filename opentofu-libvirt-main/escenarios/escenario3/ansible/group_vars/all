@@ -27,3 +27,11 @@ guestbook_db_host: "mariadb.example.org"
 guestbook_db_user: "guestbook_user"
 guestbook_db_password: "guestbook_pass"
 guestbook_db_name: "guestbook_db"
+
+#Variables para Wordpress
+
+wordpress_db_name: wordpress
+wordpress_db_user: wpuser
+wordpress_db_password: wppassword
+wordpress_domain: "wordpress.local"
+wordpress_install_dir: "/var/www/wordpress"
