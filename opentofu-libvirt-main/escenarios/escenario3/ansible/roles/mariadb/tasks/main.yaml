@@ -66,3 +66,15 @@
     priv: "{{ wordpress_db_name }}.*:ALL"
     state: present
     login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: Copiar dump SQL de WordPress
+  copy:
+    src: wordpress.sql
+    dest: /tmp/wordpress.sql
+
+- name: Importar base de datos WordPress
+  community.mysql.mysql_db:
+    name: "{{ wordpress_db_name }}"
+    state: import
+    target: /tmp/wordpress.sql
+    login_unix_socket: /var/run/mysqld/mysqld.sock
