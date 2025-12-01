@@ -1,0 +1,21 @@
+<VirtualHost *:80>
+    ServerName {{ biblioteca_domain }}
+    DocumentRoot {{ biblioteca_install_dir }}
+
+    <Directory {{ biblioteca_install_dir }}>
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/biblioteca_error.log
+    CustomLog ${APACHE_LOG_DIR}/biblioteca_access.log combined
+
+    Alias /phpmyadmin /usr/share/phpmyadmin
+    <Directory /usr/share/phpmyadmin>
+        Options FollowSymLinks
+        DirectoryIndex index.php
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+</VirtualHost>

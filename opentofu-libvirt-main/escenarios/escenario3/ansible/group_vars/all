@@ -35,3 +35,13 @@ wordpress_db_user: wpuser
 wordpress_db_password: wppassword
 wordpress_domain: "wordpress.local"
 wordpress_install_dir: "/var/www/wordpress"
+
+#Variables para la biblioteca
+biblioteca_domain: "biblioteca.local"
+biblioteca_install_dir: "/var/www/biblioteca"
+
+biblioteca_repo_url: "https://github.com/josedom24/Sistema-de-biblioteca-basico-php-8-y-mysql.git"
+
+biblioteca_db_name: "biblioteca"
+biblioteca_db_user: "biblio_user"
+biblioteca_db_password: "biblio_pass"

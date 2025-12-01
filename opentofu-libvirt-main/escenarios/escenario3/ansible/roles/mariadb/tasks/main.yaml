@@ -78,3 +78,32 @@
     state: import
     target: /tmp/wordpress.sql
     login_unix_socket: /var/run/mysqld/mysqld.sock
+
+### CREAR BASE DE DATOS DE LA APP PHP BIBLIOTECA
+
+- name: Crear base de datos Biblioteca
+  community.mysql.mysql_db:
+    name: "{{ biblioteca_db_name }}"
+    state: present
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: Crear usuario de Biblioteca
+  community.mysql.mysql_user:
+    name: "{{ biblioteca_db_user }}"
+    password: "{{ biblioteca_db_password }}"
+    host: "%"
+    priv: "{{ biblioteca_db_name }}.*:ALL"
+    state: present
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: Copiar SQL dump de Biblioteca
+  copy:
+    src: biblioteca.sql
+    dest: /tmp/biblioteca.sql
+
+- name: Importar base de datos Biblioteca
+  community.mysql.mysql_db:
+    name: "{{ biblioteca_db_name }}"
+    state: import
+    target: /tmp/biblioteca.sql
+    login_unix_socket: /var/run/mysqld/mysqld.sock

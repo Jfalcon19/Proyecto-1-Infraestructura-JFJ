@@ -154,3 +154,51 @@
     dest: /etc/apache2/sites-enabled/wordpress.conf
     state: link
   notify: restart apache2
+
+### INSTALAR APP PHP BIBLIOTECA 
+
+- name: Instalar git si no está instalado
+  apt:
+    name: git
+    state: present
+    update_cache: yes
+
+- name: Descargar aplicación Biblioteca desde GitHub
+  git:
+    repo: "{{ biblioteca_repo_url }}"
+    dest: "{{ biblioteca_install_dir }}"
+    version: master
+
+- name: Ajustar permisos
+  file:
+    path: "{{ biblioteca_install_dir }}"
+    owner: www-data
+    group: www-data
+    recurse: yes
+
+- name: Crear VirtualHost de Biblioteca
+  template:
+    src: biblioteca.conf.j2
+    dest: /etc/apache2/sites-available/biblioteca.conf
+
+- name: Activar VirtualHost de Biblioteca
+  file:
+    src: /etc/apache2/sites-available/biblioteca.conf
+    dest: /etc/apache2/sites-enabled/biblioteca.conf
+    state: link
+  notify: restart apache2
+
+- name: Copiar Config.php para la aplicación Biblioteca
+  template:
+    src: biblioteca_config.php.j2
+    dest: "{{ biblioteca_install_dir }}/Config/Config.php"
+    owner: www-data
+    group: www-data
+    mode: '0644'
+
+- name: Ajustar permisos de Biblioteca
+  file:
+    path: "{{ biblioteca_install_dir }}"
+    owner: www-data
+    group: www-data
+    recurse: yes
