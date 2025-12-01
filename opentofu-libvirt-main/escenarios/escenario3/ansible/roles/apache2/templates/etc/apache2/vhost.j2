@@ -9,6 +9,15 @@
         Require all granted
     </Directory>
 
+	Alias /phpmyadmin /usr/share/phpmyadmin
+
+    <Directory /usr/share/phpmyadmin>
+        Options FollowSymLinks
+        DirectoryIndex index.php
+        AllowOverride All
+        Require all granted
+    </Directory>
+
 	ErrorLog ${APACHE_LOG_DIR}/{{item.datos.errorlog}}.log
 	CustomLog ${APACHE_LOG_DIR}/{{item.datos.accesslog}}.log combined
 

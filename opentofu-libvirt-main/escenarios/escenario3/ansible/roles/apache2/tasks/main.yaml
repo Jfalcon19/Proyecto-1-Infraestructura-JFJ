@@ -83,6 +83,16 @@
     state: link
   notify: restart apache2
 
+- name: Configurar phpMyAdmin para usar conexión TCP con MariaDB externa
+  ansible.builtin.lineinfile:
+    path: /etc/phpmyadmin/config.inc.php
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: "Servers\\[1\\]\\['host'\\]", line: "$cfg['Servers'][1]['host'] = '10.0.0.2';" }
+    - { regexp: "Servers\\[1\\]\\['connect_type'\\]", line: "$cfg['Servers'][1]['connect_type'] = 'tcp';" }
+  notify: restart apache2
+
 
 ### INSTALAR WORDPRESS
 
